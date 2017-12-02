@@ -19,8 +19,8 @@ namespace Day1
                 return;
             }
 
+            //Part 1 - Compute sum of like adjacent digits
             long outputSum = 0;
-
             int i = 0;
             while (i < (puzzleInput.Length-1))
             {
@@ -33,7 +33,35 @@ namespace Day1
 
             if (puzzleInput[0] == puzzleInput.Last()) { outputSum = outputSum + puzzleInput.Last()-'0';}
 
-            Console.WriteLine("Puzzle instance answer = " + outputSum.ToString());
+            Console.WriteLine("Puzzle instance Part 1 answer = " + outputSum.ToString());
+            Console.WriteLine();
+
+            //Part 2 - Compute sum of like digits that are halfway around the list - Assumption is it is even number
+            int j = 0;
+            int half = puzzleInput.Length/2;
+            int outputSum2 = 0;
+            while (j<puzzleInput.Length)
+            {
+                if ((j + half)<puzzleInput.Length)
+                {
+                    if (puzzleInput[j] == puzzleInput[j+half])
+                    {
+                        outputSum2 = outputSum2 + (puzzleInput[j]-'0');
+                    }
+                }
+                else
+                {
+                    if (puzzleInput[j] == puzzleInput[j-half])
+                    {
+                        outputSum2 = outputSum2 + (puzzleInput[j]-'0');
+                    }
+                }
+                j++;
+            }
+    
+            Console.WriteLine("Puzzle instance Part 2 answer = " + outputSum2.ToString());
+            Console.WriteLine();
+
         }
     }
 }
