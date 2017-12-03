@@ -24,15 +24,11 @@ namespace AdventOfCode
 
     public class SpiralGrid
     {
-        private List<GridPoint> gridPoints = new List<GridPoint>();
-
         public SpiralGrid()
         {
             currentX = 0;
             currentY = 0;
             currentStep = 1;
-            GridPoint origin = new GridPoint(0,0);
-            gridPoints.Add(origin);
         }
 
         public int targetEnd;
@@ -49,75 +45,68 @@ namespace AdventOfCode
             GridPoint finalLocation = new GridPoint(currentX, currentY);
             string nextMove = "";
 
+            int maxXPos = 0;
+            int maxYPos = 0;
+            int maxXNeg = 0;
+            int maxYNeg = 0;
+            
+
             if (targetEnd == 1) return finalLocation;
             nextMove = "Right";
             
             while (currentStep < targetEnd)
             {
-                Console.WriteLine("Current Step - " + currentStep + " Current X - " + currentX + " Current Y - " + currentY);
                 currentStep++;
                 if (nextMove=="Right")
                 {
                     currentX++;
-                    GridPoint newRight = new GridPoint(currentX, currentY);
-                    gridPoints.Add(newRight);
-                    
-                    //Check if up already traversed if yes move right, if no, move up
-                    if (gridPoints.Contains(new GridPoint(currentX, currentY+1)))
+                    if (currentX>maxXPos)
                     {
-                        nextMove = "Right";
+                        maxXPos = currentX;
+                        nextMove = "Up";
                     }
                     else
                     {
-                        nextMove = "Up";
+                        nextMove = "Right";
                     }
                 }
                 else if (nextMove=="Up")
                 {
                     currentY++;
-                    GridPoint newUp = new GridPoint(currentX, currentY);
-                    gridPoints.Add(newUp);
-
-                    //Check if left already traversed, if yes move up, if no, move left
-                    if (gridPoints.Contains(new GridPoint(currentX-1, currentY)))
+                    if (currentY>maxYPos)
                     {
-                        nextMove = "Up";
+                        maxYPos = currentY;
+                        nextMove = "Left";
                     }
                     else
                     {
-                        nextMove = "Left";
+                        nextMove = "Up";
                     }
                 }
                 else if (nextMove=="Left")
                 {
                     currentX--;
-                    GridPoint newLeft = new GridPoint(currentX, currentY);
-                    gridPoints.Add(newLeft);
-
-                    //Check if down already traversed, if yes move left, if no, move down
-                    if (gridPoints.Contains(new GridPoint(currentX, currentY-1)))
+                    if (currentX<maxXNeg)
                     {
-                        nextMove = "Left";
+                        maxXNeg = currentX;
+                        nextMove = "Down";
                     }
                     else
                     {
-                        nextMove = "Down";
+                        nextMove = "Left";
                     }
                 }
                 else if (nextMove=="Down")
                 {
                     currentY--;
-                    GridPoint newDown = new GridPoint(currentX, currentY);
-                    gridPoints.Add(newDown);
-                    
-                    //Check if right already traversed, if yes move down, if no, move right
-                    if (gridPoints.Contains(new GridPoint(currentX+1, currentY)))
+                    if (currentY<maxYNeg)
                     {
-                        nextMove = "Down";
+                        maxYNeg = currentY;
+                        nextMove = "Right";
                     }
                     else
                     {
-                        nextMove = "Right";
+                        nextMove = "Down";
                     }
                 }
             }
