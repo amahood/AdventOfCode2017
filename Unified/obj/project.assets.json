@@ -670,11 +670,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Adam\\AdventOfCode2017\\Day1\\Day1.csproj",
-      "projectName": "Day1",
-      "projectPath": "c:\\Users\\Adam\\AdventOfCode2017\\Day1\\Day1.csproj",
+      "projectUniqueName": "C:\\Users\\Adam\\AdventOfCode2017\\Unified\\Unified.csproj",
+      "projectName": "Unified",
+      "projectPath": "C:\\Users\\Adam\\AdventOfCode2017\\Unified\\Unified.csproj",
       "packagesPath": "C:\\Users\\Adam\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Adam\\AdventOfCode2017\\Day1\\obj\\",
+      "outputPath": "C:\\Users\\Adam\\AdventOfCode2017\\Unified\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

@@ -5,11 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-namespace Day2
+namespace AdventOfCode
 {
-    class Program
+    public static class Day2
     {
-        static void Main(string[] args)
+        public static void TestDay2()
         {
 
             //NOTE - Initial solve of this puzzle takes the following dependnecies
@@ -20,8 +20,10 @@ namespace Day2
                 // Could almost certainly combine the part 1 and 2 processing into 1 loo
                 // Could probably find a way to break out of the line processing loop in part 2 once we have already found an evenly divisible set
 
+            Console.WriteLine("-------------------DAY 2-------------------");
+
             //Part 1 - Find checksum of sum of biggest - smallest in each line
-            StreamReader sr = new StreamReader("puzzleInput.txt");
+            StreamReader sr = new StreamReader("day2Input.txt");
             string line;
             
             int checksum = 0;
@@ -48,7 +50,7 @@ namespace Day2
             sr.Close();
 
             //Part 2 - Find checksum of sum of only two numbers divisible in each line
-            StreamReader sr2 = new StreamReader("puzzleInput.txt");
+            StreamReader sr2 = new StreamReader("day2Input.txt");
             string line2;
             
             int checksum2 = 0;

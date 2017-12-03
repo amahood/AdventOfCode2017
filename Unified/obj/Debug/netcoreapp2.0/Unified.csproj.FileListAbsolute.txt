@@ -1,0 +1,10 @@
+c:\Users\Adam\AdventOfCode2017\Unified\obj\Debug\netcoreapp2.0\Unified.csproj.CoreCompileInputs.cache
+c:\Users\Adam\AdventOfCode2017\Unified\obj\Debug\netcoreapp2.0\Unified.AssemblyInfoInputs.cache
+c:\Users\Adam\AdventOfCode2017\Unified\obj\Debug\netcoreapp2.0\Unified.AssemblyInfo.cs
+c:\Users\Adam\AdventOfCode2017\Unified\bin\Debug\netcoreapp2.0\Unified.deps.json
+c:\Users\Adam\AdventOfCode2017\Unified\bin\Debug\netcoreapp2.0\Unified.runtimeconfig.json
+c:\Users\Adam\AdventOfCode2017\Unified\bin\Debug\netcoreapp2.0\Unified.runtimeconfig.dev.json
+c:\Users\Adam\AdventOfCode2017\Unified\bin\Debug\netcoreapp2.0\Unified.dll
+c:\Users\Adam\AdventOfCode2017\Unified\bin\Debug\netcoreapp2.0\Unified.pdb
+c:\Users\Adam\AdventOfCode2017\Unified\obj\Debug\netcoreapp2.0\Unified.dll
+c:\Users\Adam\AdventOfCode2017\Unified\obj\Debug\netcoreapp2.0\Unified.pdb
