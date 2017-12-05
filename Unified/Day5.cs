@@ -33,12 +33,17 @@ namespace AdventOfCode
                 {
                     instructionList[instructionPointer]++;
                 }
+                else if (currentInstruction>=3)
+                {
+                    instructionList[instructionPointer]--;
+                    instructionPointer+=currentInstruction;
+                }
                 else
                 {
                     instructionList[instructionPointer]++;
                     instructionPointer+=currentInstruction;
                 }
-                
+
                 instructionCounter++;
             }
             Console.WriteLine("It took "+instructionCounter+" instructions to service the IRQ!");
