@@ -41,7 +41,26 @@ namespace AdventOfCode
             }
 
             Console.WriteLine("It took " + loopTracker + " redistribution cycles before detecting infinite memory rebalance loop!");
+            int loopDistance = FindLoopDistance(patternsSeen, memoryArray);
+            Console.WriteLine("Infinite loop repeats every " + loopDistance + " cycles!");
+        }
 
+        public static int FindLoopDistance(List<List<int>> patternList, List<int> memStateToFind)
+        {
+            //TODO FINISH THIS - PERHAPS START FROM THE END AND WORK BACKWARD SO YOU FIND THE LAST TWO OCCURRENCES?
+            bool foundRepeat = false;
+            int i = patternList.Count-2;
+            int loopDistance = 0;
+            while (!foundRepeat && i>=0)
+            {
+                if (patternList[i].SequenceEqual(memStateToFind))
+                {
+                    foundRepeat = true;
+                    loopDistance = patternList.Count-i-1;
+                }
+                i--;
+            }
+            return loopDistance;
         }
 
         public static List<List<int>> AddToPatternsSeen(List<List<int>> patternList, List<int> currentArray)
