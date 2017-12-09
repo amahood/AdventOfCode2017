@@ -22,39 +22,41 @@ namespace AdventOfCode
             bool inMiddleOfGarbage = false;
 
             int runningScore = 0;
+            int numValidCharsInGarbage = 0;
 
             while (!sr.EndOfStream)
             {
                 nextChar = (char)sr.Read();
-                Console.WriteLine(nextChar);
 
                 if (!previousCharWasValidGarbageBang)
                 {
                     switch (nextChar)
                     {
-                        //Likely need to take in midle of garbage into account in all of these
                         case '!':
-                            if (inMiddleOfGarbage){previousCharWasValidGarbageBang = true;Console.WriteLine("Found Valid Garbage Bang!");}
+                            if (inMiddleOfGarbage){previousCharWasValidGarbageBang = true;}
                             break;
                         case '{':
-                            if (!inMiddleOfGarbage){currentNumberOpenGroups++;Console.WriteLine("Opening Group! " + currentNumberOpenGroups);}
+                            if (!inMiddleOfGarbage){currentNumberOpenGroups++;}
+                            if (inMiddleOfGarbage){numValidCharsInGarbage++;}
                             break;
                         case '}':
                             if (!inMiddleOfGarbage)
                             {
                                 runningScore += currentNumberOpenGroups;
-                                Console.WriteLine("Closed group! " + currentNumberOpenGroups);
                                 currentNumberOpenGroups--;
                                 numberFullGroupsSeen++;
                             }
+                            if (inMiddleOfGarbage){numValidCharsInGarbage++;}
                             break;
                         case '<':
-                            if (!inMiddleOfGarbage){ inMiddleOfGarbage = true;Console.WriteLine("Found garbage!");}
+                            if (!inMiddleOfGarbage){ inMiddleOfGarbage = true;}
+                            else if (inMiddleOfGarbage){numValidCharsInGarbage++;}
                             break;
                         case '>':
-                            if (inMiddleOfGarbage){ inMiddleOfGarbage = false;Console.WriteLine("Closed garbage!");}
+                            if (inMiddleOfGarbage){ inMiddleOfGarbage = false;}
                             break;
                         default:
+                            if (inMiddleOfGarbage){numValidCharsInGarbage++;}
                             break;
                     }
                 }
@@ -63,6 +65,7 @@ namespace AdventOfCode
             }
 
             Console.WriteLine("Total score found - " + runningScore);
+            Console.WriteLine("Total valid chars in garbage found - " + numValidCharsInGarbage);
         }
 
     }
