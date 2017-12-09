@@ -22,6 +22,7 @@ namespace AdventOfCode
                 program.Add(inst) ;
             }
             
+            int highestValueEverSeen = 0;
             Dictionary<string, int> registerSet = new Dictionary<string, int>();
             foreach (Instruction i in program)
             {
@@ -73,6 +74,12 @@ namespace AdventOfCode
                             break;
                     }
                 }
+
+                //Find max Value in all registers, compare to tracker
+                foreach (KeyValuePair<string,int> kvp in registerSet)
+                {
+                    if (registerSet[kvp.Key]>highestValueEverSeen){highestValueEverSeen = registerSet[kvp.Key];}
+                }
             }
 
             //Find max value in register - Probably a much more efficient way to do this with Linq
@@ -82,6 +89,7 @@ namespace AdventOfCode
                 if (registerSet[kvp.Key]>maxValueSoFar){maxValueSoFar = registerSet[kvp.Key];}
             }
             Console.WriteLine("Max value in any register after program is " + maxValueSoFar);
+            Console.WriteLine("Max value ever seen " + highestValueEverSeen);
         }
 
         public static Instruction CreateInstructionFromString(string instText)
