@@ -47,6 +47,9 @@ namespace AdventOfCode
                 case 9:
                     Day9.TestDay9();
                     break;
+                case 10:
+                    Day10.TestDay10();
+                    break;
                 default:
                     break; 
             }
