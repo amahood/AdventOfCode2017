@@ -13,8 +13,6 @@ namespace AdventOfCode
         {
             Console.WriteLine("-------------------DAY 10-------------------");
 
-            //NOT GETTING RIGHT ANSWER FOR ANY OF SAMPLE TEST CASES, NEED TO TRY TO DEBUG SOMEWHERE - EMPTY STRING IS PROBABLY BEST PLACE TO START
-
             //Read in list of instructions we need to parse - Changing this to read each char for Part 2
             StreamReader sr = new StreamReader("day10Input.txt");
             char nextChar;
@@ -23,7 +21,6 @@ namespace AdventOfCode
             {
                 nextChar = (char)sr.Read();
                 instructionSet.Add((Int32)nextChar);
-                //Console.WriteLine((Int32)nextChar);
             }
             //Add well-known characters
             instructionSet.Add(17);
