@@ -33,26 +33,51 @@ namespace AdventOfCode
             }
 
             int numPrograms = programNetwork.Count;
-            List<int> canTalkToZero = new List<int>();
-            canTalkToZero.Add(0);
+
+            //Need to make a copy of the network, otherwise, finding members of the group won't work
+            Dictionary<int, int[]> networkCloneForGroupTracking = new Dictionary<int, int[]>();
+            foreach (KeyValuePair<int, int[]> kvp in programNetwork)
+            {
+                networkCloneForGroupTracking.Add(kvp.Key, kvp.Value);
+            }
+
+            int numberOfGroups = 0;
+            while (networkCloneForGroupTracking.Count > 0)
+            {
+                List<int> canTalkToSelectedProgram = CanTalkToProgram(programNetwork, networkCloneForGroupTracking.First().Key);
+                foreach (int groupMember in canTalkToSelectedProgram)
+                {
+                    networkCloneForGroupTracking.Remove(groupMember);
+                }
+                numberOfGroups++;
+            }
+
+            Console.WriteLine("Number of groups found - " + numberOfGroups);
+        }
+
+        public static List<int> CanTalkToProgram(Dictionary<int, int[]> network, int personToTalkTo)
+        {
+            List<int> canTalkToPerson = new List<int>();
+            canTalkToPerson.Add(personToTalkTo);
+
+            int numPrograms = network.Count;
 
             for (int i = 1; i<numPrograms; i++)
             {
                 for (int j = i; j<numPrograms; j++)
                 {
-                    KeyValuePair<int, int[]> programNode = new KeyValuePair<int, int[]>(j,programNetwork[j]);
+                    KeyValuePair<int, int[]> programNode = new KeyValuePair<int, int[]>(j,network[j]);
                     foreach (int connectionNode in programNode.Value)
                     {
-                        if (canTalkToZero.Contains(connectionNode) && !canTalkToZero.Contains(programNode.Key))
+                        if (canTalkToPerson.Contains(connectionNode) && !canTalkToPerson.Contains(programNode.Key))
                         {
-                            canTalkToZero.Add(programNode.Key);
+                            canTalkToPerson.Add(programNode.Key);
                         }
                     }       
                 }
             }
 
-            Console.WriteLine(canTalkToZero.Count + " programs can talk to 0!");
-
+            return canTalkToPerson;
         }
     }
 
