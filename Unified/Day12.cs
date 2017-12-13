@@ -65,13 +65,13 @@ namespace AdventOfCode
 
             for (int i = 1; i<numPrograms; i++)
             {
-                for (int j = i; j<numPrograms; j++)
+                for (int j = 1; j<numPrograms; j++)
                 {
                     foreach (int connectionNode in network.ElementAt(j).Value)
                     {
-                        if (canTalkToPerson.Contains(connectionNode) && !(canTalkToPerson.Contains(j)))
+                        if (canTalkToPerson.Contains(connectionNode) && !(canTalkToPerson.Contains(network.ElementAt(j).Key)))
                         {
-                            canTalkToPerson.Add(j);
+                            canTalkToPerson.Add(network.ElementAt(j).Key);
                         }
                     }       
                 }
