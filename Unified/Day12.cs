@@ -44,7 +44,7 @@ namespace AdventOfCode
             int numberOfGroups = 0;
             while (networkCloneForGroupTracking.Count > 0)
             {
-                List<int> canTalkToSelectedProgram = CanTalkToProgram(programNetwork, networkCloneForGroupTracking.First().Key);
+                List<int> canTalkToSelectedProgram = CanTalkToProgram(networkCloneForGroupTracking);
                 foreach (int groupMember in canTalkToSelectedProgram)
                 {
                     networkCloneForGroupTracking.Remove(groupMember);
@@ -55,10 +55,11 @@ namespace AdventOfCode
             Console.WriteLine("Number of groups found - " + numberOfGroups);
         }
 
-        public static List<int> CanTalkToProgram(Dictionary<int, int[]> network, int personToTalkTo)
+        public static List<int> CanTalkToProgram(Dictionary<int, int[]> network)
         {
             List<int> canTalkToPerson = new List<int>();
-            canTalkToPerson.Add(personToTalkTo);
+            int nextGroupAnchor = network.First().Key;
+            canTalkToPerson.Add(nextGroupAnchor);
 
             int numPrograms = network.Count;
 
@@ -66,12 +67,11 @@ namespace AdventOfCode
             {
                 for (int j = i; j<numPrograms; j++)
                 {
-                    KeyValuePair<int, int[]> programNode = new KeyValuePair<int, int[]>(j,network[j]);
-                    foreach (int connectionNode in programNode.Value)
+                    foreach (int connectionNode in network.ElementAt(j).Value)
                     {
-                        if (canTalkToPerson.Contains(connectionNode) && !canTalkToPerson.Contains(programNode.Key))
+                        if (canTalkToPerson.Contains(connectionNode) && !(canTalkToPerson.Contains(j)))
                         {
-                            canTalkToPerson.Add(programNode.Key);
+                            canTalkToPerson.Add(j);
                         }
                     }       
                 }
