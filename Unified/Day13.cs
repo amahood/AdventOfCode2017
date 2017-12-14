@@ -46,15 +46,22 @@ namespace AdventOfCode
                 builtFirewall.Add(nextLayer);
             }
 
+            int severityOfTraverse = TravelFroggerFirewall(builtFirewall);
+
+            Console.WriteLine("Total severity of frogger firewall crossing - " + severityOfTraverse);
+        }
+
+        public static int TravelFroggerFirewall(List<FirewallLayer> inputFirewall)
+        {
             int currentFroggerLane = 0;
             int runningSeverity = 0;
             bool isFirstStep = true;
 
             //Add severity of row 0, as we know we will hit this
-            runningSeverity += builtFirewall[currentFroggerLane].depthLayer* builtFirewall[currentFroggerLane].range;
-            builtFirewall[currentFroggerLane].isFroggerInLane = true;
+            runningSeverity += inputFirewall[currentFroggerLane].depthLayer* inputFirewall[currentFroggerLane].range;
+            inputFirewall[currentFroggerLane].isFroggerInLane = true;
 
-            while (currentFroggerLane<(builtFirewall.Count-1))
+            while (currentFroggerLane<(inputFirewall.Count-1))
             {
                 //Increment frogger lane
                 if (!isFirstStep)
@@ -62,15 +69,15 @@ namespace AdventOfCode
                     currentFroggerLane++;
                     
                     //Check to see if we are fucked by scanner
-                    if (builtFirewall[currentFroggerLane].currentScannerPosition==0)
+                    if (inputFirewall[currentFroggerLane].currentScannerPosition==0)
                     {
-                        builtFirewall[currentFroggerLane].isFroggerInLane = true;
-                        runningSeverity += builtFirewall[currentFroggerLane].depthLayer* builtFirewall[currentFroggerLane].range;
+                        inputFirewall[currentFroggerLane].isFroggerInLane = true;
+                        runningSeverity += inputFirewall[currentFroggerLane].depthLayer* inputFirewall[currentFroggerLane].range;
                     }
                 }
 
                 //cycle scanner
-                foreach (FirewallLayer fl in builtFirewall)
+                foreach (FirewallLayer fl in inputFirewall)
                 {
                     fl.CycleScanner();
                 }
@@ -79,9 +86,14 @@ namespace AdventOfCode
                     isFirstStep = false;
                 }
             }
-            Console.WriteLine("Total severity of frogger firewall crossing - " + runningSeverity);
+
+            return runningSeverity;
         }
+
+
     }
+
+    
 
     public class FirewallLayer
     {
