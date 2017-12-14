@@ -35,11 +35,107 @@ namespace AdventOfCode
                 }
             }
 
-            //NExt easiest thing to do here is sort
+            //Next easiest thing to do here is sort
+            Dictionary<int,int> firewallInputSorted = firewallInput.OrderBy(x => x.Key).ToDictionary(pair => pair.Key, pair => pair.Value);
 
+            //Create List of FirewallLayers that is new class structure firewall
+            List<FirewallLayer> builtFirewall = new List<FirewallLayer>();
+            foreach (KeyValuePair<int,int> kvp in firewallInputSorted)
+            {
+                FirewallLayer nextLayer = new FirewallLayer(kvp.Key, kvp.Value);
+                builtFirewall.Add(nextLayer);
+            }
+
+            int currentFroggerLane = 0;
+            int runningSeverity = 0;
+            bool isFirstStep = true;
+
+            //Add severity of row 0, as we know we will hit this
+            runningSeverity += builtFirewall[currentFroggerLane].depthLayer* builtFirewall[currentFroggerLane].range;
+            builtFirewall[currentFroggerLane].isFroggerInLane = true;
+
+            while (currentFroggerLane<(builtFirewall.Count-1))
+            {
+                //Increment frogger lane
+                if (!isFirstStep)
+                {
+                    currentFroggerLane++;
+                    
+                    //Check to see if we are fucked by scanner
+                    if (builtFirewall[currentFroggerLane].currentScannerPosition==0)
+                    {
+                        builtFirewall[currentFroggerLane].isFroggerInLane = true;
+                        runningSeverity += builtFirewall[currentFroggerLane].depthLayer* builtFirewall[currentFroggerLane].range;
+                    }
+                }
+
+                //cycle scanner
+                foreach (FirewallLayer fl in builtFirewall)
+                {
+                    fl.CycleScanner();
+                }
+                if (isFirstStep)
+                {
+                    isFirstStep = false;
+                }
+            }
+            Console.WriteLine("Total severity of frogger firewall crossing - " + runningSeverity);
+        }
+    }
+
+    public class FirewallLayer
+    {
+        public FirewallLayer(int depth, int incomingRange)
+        {
+            depthLayer = depth;
+            range = incomingRange;
+            currentScannerPosition = 0;
+            isFroggerInLane = false;
+            isScannerAscending = false;
         }
 
-        
+        public int depthLayer;
+        public int range;
+        public int currentScannerPosition;
+        public bool isFroggerInLane;
+        public bool isScannerAscending;
+
+        //Add function to compute next position, taking into account rollover
+        public void CycleScanner()
+        {
+            if (range>2)
+            {
+                if (currentScannerPosition==(range-1))
+                {
+                    currentScannerPosition = range-2;
+                    isScannerAscending = true;
+                }
+                else if (currentScannerPosition==0)
+                {
+                    currentScannerPosition = 1;
+                    isScannerAscending = false;
+                }
+                else if (isScannerAscending)
+                {
+                    currentScannerPosition-=1;
+                }
+                else 
+                {
+                    currentScannerPosition+=1;
+                }
+            }
+            else if (range==2)
+            {
+                if (currentScannerPosition==0)
+                {
+                    currentScannerPosition=1;
+                }
+                else if (currentScannerPosition==1)
+                {
+                    currentScannerPosition=0;
+                }
+            }
+        }
     }
 
 }
