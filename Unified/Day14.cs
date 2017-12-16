@@ -16,9 +16,7 @@ namespace AdventOfCode
             //128x128 grid, each row by a knot hash
             //Each row represntation of knot hash of <string>-<rownumber>
 
-
- 
-            string inputString = "flqrgnkx";
+            string inputString = "wenycdww;";
             StringBuilder trackingString = new StringBuilder();
             List<string> stringGrid = new List<string>();
             //Loop of 128
@@ -67,6 +65,7 @@ namespace AdventOfCode
 
             Console.WriteLine("Number of Ones = " + numberOfOnes);
             
+            //Create grid to track answers
             int currentRegionTracker = 1;
             int[,] regionGrid = new int[128,128];
             //Fill grid with 0s
@@ -84,7 +83,57 @@ namespace AdventOfCode
                 {
                     if (stringGrid[row][column]=='1')
                     {
-                        //TODO CHECKING STUFF HERE               
+                        //Retrieve square from answer grid and check to see if grid is already populated with number
+                        int answerFromAnswerGrid = regionGrid[row,column];
+                        if (answerFromAnswerGrid==0)
+                        {
+                            bool populatedByNeighbor = false;
+                            //If No
+                                //Check to see if any other around are populated with ones (keep track of these variables), if so we are their value from the grid (need to take edges into account)
+                                    //Check up
+                                    if (row>0)
+                                    {
+                                        if (stringGrid[row-1][column]=='1' && regionGrid[row-1,column]!=0)
+                                        {
+                                            regionGrid[row,column] = regionGrid[row-1,column];
+                                            populatedByNeighbor = true;
+                                        }
+                                    }
+                                    //Check left
+                                    if (column>0)
+                                    {
+                                        if ((stringGrid[row][column-1]=='1') && (regionGrid[row,column-1]!=0))
+                                        {
+                                            regionGrid[row,column] = regionGrid[row,column-1];
+                                            populatedByNeighbor = true;
+                                        }
+                                    }
+                                    //Check right
+                                    if (column<127)
+                                    {
+                                        if (stringGrid[row][column+1]=='1' && regionGrid[row,column+1]!=0)
+                                        {
+                                            regionGrid[row,column] = regionGrid[row,column+1];
+                                            populatedByNeighbor = true;
+                                        }
+                                    }
+                                    //Check down
+                                    if (row<127)
+                                    {
+                                        if (stringGrid[row+1][column]=='1' && regionGrid[row+1,column]!=0)
+                                        {
+                                            regionGrid[row,column] = regionGrid[row+1,column];
+                                            populatedByNeighbor = true;
+                                        }
+                                    }
+                                //If not, set equal to current tracker, increment tracker
+                                if (!populatedByNeighbor)
+                                {
+                                    regionGrid[row,column] = currentRegionTracker;
+                                    currentRegionTracker++;
+                                }
+
+                        }
                         
                     }
                 }
@@ -98,7 +147,7 @@ namespace AdventOfCode
                 {
                     rowText.Append(regionGrid[row,column].ToString()+".");
                 }
-                Console.WriteLine(rowText.ToString());
+                //Console.WriteLine(rowText.ToString());
             }
 
             Console.WriteLine("Number of groups - " + (currentRegionTracker-1));
