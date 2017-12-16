@@ -46,9 +46,42 @@ namespace AdventOfCode
                 builtFirewall.Add(nextLayer);
             }
 
-            int severityOfTraverse = TravelFroggerFirewall(builtFirewall);
+            //New alternative mechanism here - prefetch and eliminate - find first number that isn't a multiple of any + it's depth
+            int newDelayTracker = 0;
+            bool foundCandidate = false;
 
-            Console.WriteLine("Total severity of frogger firewall crossing - " + severityOfTraverse);
+            while (!foundCandidate)
+            {
+                //Console.WriteLine("Testing delay - " + newDelayTracker);
+                bool foundIntermediateProblem = false;
+                foreach (FirewallLayer f in builtFirewall)
+                {
+                    //Bail if we already  found a problem and on delay 0, first pass
+                    if (newDelayTracker==0){foundIntermediateProblem = true;}
+                    if (!foundIntermediateProblem)
+                    {
+                        if ( (newDelayTracker+f.depthLayer) >= (2*(f.range-1)) && f.range!=0 )
+                        {
+                            int layerModuloResult = (newDelayTracker+f.depthLayer) % (2*(f.range-1));
+                            if (layerModuloResult==0)
+                            {
+                                foundIntermediateProblem = true;
+                            }
+                        }
+                    }
+                }
+                if (foundIntermediateProblem==false)
+                {
+                    foundCandidate = true;
+                }
+
+                newDelayTracker++;
+            }
+
+
+            
+
+            Console.WriteLine("Delay yielding free crossing - " + (newDelayTracker-1));
         }
 
         public static int TravelFroggerFirewall(List<FirewallLayer> inputFirewall)
@@ -56,13 +89,20 @@ namespace AdventOfCode
             int currentFroggerLane = 0;
             int runningSeverity = 0;
             bool isFirstStep = true;
-
-            //Add severity of row 0, as we know we will hit this
-            runningSeverity += inputFirewall[currentFroggerLane].depthLayer* inputFirewall[currentFroggerLane].range;
-            inputFirewall[currentFroggerLane].isFroggerInLane = true;
+            bool hitOnFirstStep = false;
 
             while (currentFroggerLane<(inputFirewall.Count-1))
             {
+                if (isFirstStep)
+                {
+                    if (inputFirewall[0].currentScannerPosition==0)
+                    {
+                        runningSeverity += inputFirewall[currentFroggerLane].depthLayer*inputFirewall[currentFroggerLane].range;
+                        inputFirewall[currentFroggerLane].isFroggerInLane = true;
+                        hitOnFirstStep = true;
+                    }
+                }
+                
                 //Increment frogger lane
                 if (!isFirstStep)
                 {
@@ -76,7 +116,7 @@ namespace AdventOfCode
                     }
                 }
 
-                //cycle scanner
+                //Cycle scanner
                 foreach (FirewallLayer fl in inputFirewall)
                 {
                     fl.CycleScanner();
@@ -87,6 +127,11 @@ namespace AdventOfCode
                 }
             }
 
+            //Artifically add one if we get hit on stepping in, as, that will register as 0
+            if (hitOnFirstStep && runningSeverity==0)
+            {
+                runningSeverity++;
+            }
             return runningSeverity;
         }
 
