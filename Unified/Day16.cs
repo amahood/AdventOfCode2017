@@ -26,9 +26,22 @@ namespace AdventOfCode
             char delimiter = ',';
             string[] instructions = stringOfInstructions.Split(delimiter);
 
-            for (int i = 0; i<instructions.Count(); i++)
+            int targetCycles = 1000000000;
+            int minNumberOfCycles = targetCycles%36; //Looks like it repeats every 36
+
+            for (int i = 0;i<minNumberOfCycles;i++)
             {
-                string currentInstruction = instructions[i];
+                initialKickLine = PerformDanceRoutine(instructions,initialKickLine);
+            }
+
+            Console.WriteLine("Dance line after all dance moves! = " + initialKickLine);
+        }
+
+        public static string PerformDanceRoutine(string[] danceMoves, string initialKickLine)
+        {
+            for (int i = 0; i<danceMoves.Count(); i++)
+            {
+                string currentInstruction = danceMoves[i];
                 switch (currentInstruction[0])
                 {
                     
@@ -69,8 +82,7 @@ namespace AdventOfCode
                         break;
                 }
             }
-
-            Console.WriteLine("Dance line after all dance moves! = " + initialKickLine);
+            return initialKickLine;
         }
 
         public static string PopulateDanceLine(int numberOfDancers)
