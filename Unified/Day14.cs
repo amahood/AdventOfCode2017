@@ -16,7 +16,7 @@ namespace AdventOfCode
             //128x128 grid, each row by a knot hash
             //Each row represntation of knot hash of <string>-<rownumber>
 
-            string inputString = "wenycdww;";
+            string inputString = "flqrgnkx";
             StringBuilder trackingString = new StringBuilder();
             List<string> stringGrid = new List<string>();
             //Loop of 128
@@ -77,6 +77,8 @@ namespace AdventOfCode
                 }
             }
 
+            //With current implementation, I'm getting close, like 1600 some 
+            //Sample case I don't think I handle is if there is a giant U, I will start at both ends with different numbers
             for (int row =0; row<128; row++)
             {
                 for (int column = 0; column<128; column++)
@@ -85,111 +87,130 @@ namespace AdventOfCode
                     {
                         //Retrieve square from answer grid and check to see if grid is already populated with number
                         int answerFromAnswerGrid = regionGrid[row,column];
+                        bool populatedDownNeighbor = false;
+                        bool populatedRightNeighbor = false;
+
                         if (answerFromAnswerGrid==0)
                         {
-                            bool populatedByNeighbor = false;
-                            //If No
-                                //Check to see if any other around are populated with ones (keep track of these variables), if so we are their value from the grid (need to take edges into account)
-                                    //Check up
-                                    if (row>0)
-                                    {
-                                        if (stringGrid[row-1][column]=='1' && regionGrid[row-1,column]!=0)
-                                        {
-                                            regionGrid[row,column] = regionGrid[row-1,column];
-                                            populatedByNeighbor = true;
-                                        }
-                                    }
-                                    //Check left
-                                    if (column>0)
-                                    {
-                                        if ((stringGrid[row][column-1]=='1') && (regionGrid[row,column-1]!=0))
-                                        {
-                                            regionGrid[row,column] = regionGrid[row,column-1];
-                                            populatedByNeighbor = true;
-                                        }
-                                    }
-                                    //Check right
-                                    if (column<127)
-                                    {
-                                        if (stringGrid[row][column+1]=='1' && regionGrid[row,column+1]!=0)
-                                        {
-                                            regionGrid[row,column] = regionGrid[row,column+1];
-                                            populatedByNeighbor = true;
-                                        }
-                                    }
-                                    //Check down
-                                    if (row<127)
-                                    {
-                                        if (stringGrid[row+1][column]=='1' && regionGrid[row+1,column]!=0)
-                                        {
-                                            regionGrid[row,column] = regionGrid[row+1,column];
-                                            populatedByNeighbor = true;
-                                        }
-                                    }
-                                //If not, set equal to current tracker, increment tracker
-                                if (!populatedByNeighbor)
+                            //Set Me
+                            regionGrid[row,column] = currentRegionTracker;
+                            //Populate Neighbors
+                                //Populate right
+                                if (column<127)
                                 {
-                                    regionGrid[row,column] = currentRegionTracker;
-                                    currentRegionTracker++;
+                                    if (stringGrid[row][column+1]=='1' && regionGrid[row,column+1]==0)
+                                    {
+                                        regionGrid[row,column+1]=currentRegionTracker;
+                                        populatedRightNeighbor = true;
+                                    }
                                 }
-
+                                //Populate down
+                                if (row<127)
+                                {
+                                    if (stringGrid[row+1][column]=='1' && regionGrid[row+1,column]==0)
+                                    {
+                                        regionGrid[row+1,column]=currentRegionTracker;
+                                        populatedDownNeighbor = true;
+                                    }
+                                }
+                                //If populated right, populate upright
+                                if (row >0 && column<127)
+                                {
+                                    if (populatedRightNeighbor)
+                                    {
+                                        if (stringGrid[row-1][column+1]=='1' && regionGrid[row-1,column+1]==0)
+                                        {
+                                            regionGrid[row-1,column+1]=currentRegionTracker;
+                                        }
+                                    }
+                                }
+                                //IF populated down, populate downleft
+                                if (row<127 && column>0)
+                                {
+                                    if (populatedDownNeighbor)
+                                    {
+                                        if (stringGrid[row+1][column-1]=='1' && regionGrid[row+1,column-1]==0)
+                                        {
+                                            regionGrid[row+1,column-1]=currentRegionTracker;
+                                        }
+                                    }
+                                }
+                                //If populated down or right, populate downright
+                                if (row<127 && column<127)
+                                {
+                                    if (populatedDownNeighbor || populatedRightNeighbor)
+                                    {
+                                        if (stringGrid[row+1][column+1]=='1' && regionGrid[row+1,column+1]==0)
+                                        {
+                                            regionGrid[row+1,column+1]=currentRegionTracker;
+                                        }
+                                    }
+                                }
+                            currentRegionTracker++;                        
                         }
-                        
+                        else if (answerFromAnswerGrid!=0)
+                        {
+                            //Spread disease to neighbors
+                            int currentSquareValue = answerFromAnswerGrid;
+                            //Populate Neighbors
+                                //Populate right
+                                if (column<127)
+                                {
+                                    if (stringGrid[row][column+1]=='1' && regionGrid[row,column+1]==0)
+                                    {
+                                        regionGrid[row,column+1]=currentSquareValue;
+                                        populatedRightNeighbor = true;
+                                    }
+                                }
+                                //Populate down
+                                if (row<127)
+                                {
+                                    if (stringGrid[row+1][column]=='1' && regionGrid[row+1,column]==0)
+                                    {
+                                        regionGrid[row+1,column]=currentSquareValue;
+                                        populatedDownNeighbor = true;
+                                    }
+                                }
+                                //If populated right, populate upright
+                                if (row >0 && column<127)
+                                {
+                                    if (populatedRightNeighbor)
+                                    {
+                                        if (stringGrid[row-1][column+1]=='1' && regionGrid[row-1,column+1]==0)
+                                        {
+                                            regionGrid[row-1,column+1]=currentSquareValue;
+                                        }
+                                    }
+                                }
+                                //IF populated down, populate downleft
+                                if (row<127 && column>0)
+                                {
+                                    if (populatedDownNeighbor)
+                                    {
+                                        if (stringGrid[row+1][column-1]=='1' && regionGrid[row+1,column-1]==0)
+                                        {
+                                            regionGrid[row+1,column-1]=currentSquareValue;
+                                        }
+                                    }
+                                }
+                                //If populated down or right, populate downright
+                                if (row<127 && column<127)
+                                {
+                                    if (populatedDownNeighbor || populatedRightNeighbor)
+                                    {
+                                        if (stringGrid[row+1][column+1]=='1' && regionGrid[row+1,column+1]==0)
+                                        {
+                                            regionGrid[row+1,column+1]=currentSquareValue;
+                                        }
+                                    }
+                                }
+                        }
                     }
                 }
             }
 
-            for (int row =0; row<128; row++)
-            {
-                StringBuilder rowText = new StringBuilder();
-                //Console.WriteLine(stringGrid[row]);
-                for (int column = 0; column<128; column++)
-                {
-                    rowText.Append(regionGrid[row,column].ToString()+".");
-                }
-                //Console.WriteLine(rowText.ToString());
-            }
-
             Console.WriteLine("Number of groups - " + (currentRegionTracker-1));
 
-        }
-
-        public static int CheckNeighborsReturnRegion(int row, int column, int[,] regionGrid)
-        {
-            //Check left
-            if (column!=0)
-            {
-                if (regionGrid[row,column-1]!=0)
-                {
-                    return regionGrid[row,column-1];
-                }
-            }
-            //Check up
-            if (row!=0)
-            {
-                if (regionGrid[row-1,column]!=0)
-                {
-                    return regionGrid[row-1,column];
-                }
-            }
-            //Check right
-            if (column!=127)
-            {
-                if (regionGrid[row,column+1]!=0)
-                {
-                    return regionGrid[row,column+1];
-                }
-            }
-            //Check down
-            if (row!=127)
-            {
-                if (regionGrid[row+1,column]!=0)
-                {
-                     return regionGrid[row+1,column];
-                }
-            }
-
-            return 0;
         }
 
         public static string CalculateKnotHash(List<int> inputInstructions)
