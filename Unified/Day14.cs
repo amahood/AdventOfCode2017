@@ -18,8 +18,9 @@ namespace AdventOfCode
 
 
  
-            string inputString = "wenycdww";
+            string inputString = "flqrgnkx";
             StringBuilder trackingString = new StringBuilder();
+            List<string> stringGrid = new List<string>();
             //Loop of 128
             for (int rowTracker = 0; rowTracker<128; rowTracker++)
             {
@@ -51,6 +52,7 @@ namespace AdventOfCode
 
                 //Store
                 trackingString.Append(sb.ToString());
+                stringGrid.Add(sb.ToString());
             }
 
             //Count ones
@@ -63,8 +65,116 @@ namespace AdventOfCode
                 }
             }
 
-            Console.WriteLine(numberOfOnes);
+            Console.WriteLine("Number of Ones = " + numberOfOnes);
             
+            int currentRegionTracker = 1;
+            int[,] regionGrid = new int[128,128];
+            //Fill grid with 0s
+            for (int row =0; row<128; row++)
+            {
+                for (int column = 0; column<128; column++)
+                {
+                    regionGrid[row, column] = 0;
+                }
+            }
+
+            for (int row =0; row<128; row++)
+            {
+                for (int column = 0; column<128; column++)
+                {
+                    if (stringGrid[row][column]=='1')
+                    {
+                        int valueInFinalGrid = regionGrid[row,column];
+                        if (valueInFinalGrid==0)
+                        {
+                            regionGrid[row,column] = currentRegionTracker;
+                            //Check right
+                            if (column<127&& row<127)
+                            {
+                                if (stringGrid[row][column+1]=='1')
+                                {
+                                    regionGrid[row,column+1]=currentRegionTracker;
+                                }
+                                //Check down
+                                if (stringGrid[row+1][column]=='1')
+                                {
+                                    regionGrid[row+1,column]=currentRegionTracker;
+                                }
+                            }
+                            currentRegionTracker++;
+                        }  
+                        else if (valueInFinalGrid!=0)
+                        {
+                            if (column<127 && row<127)
+                            {
+                                //Populate right
+                                if (stringGrid[row][column+1]=='1')
+                                {
+                                    regionGrid[row,column+1]=valueInFinalGrid;
+                                }
+                                //Populate down
+                                if (stringGrid[row+1][column]=='1')
+                                {
+                                    regionGrid[row+1,column]=valueInFinalGrid;
+                                }
+                            }
+                        }                      
+                        
+                    }
+                }
+            }
+
+            for (int row =0; row<128; row++)
+            {
+                StringBuilder rowText = new StringBuilder();
+                //Console.WriteLine(stringGrid[row]);
+                for (int column = 0; column<128; column++)
+                {
+                    rowText.Append(regionGrid[row,column].ToString()+".");
+                }
+                Console.WriteLine(rowText.ToString());
+            }
+
+            Console.WriteLine("Number of groups - " + (currentRegionTracker-1));
+
+        }
+
+        public static int CheckNeighborsReturnRegion(int row, int column, int[,] regionGrid)
+        {
+            //Check left
+            if (column!=0)
+            {
+                if (regionGrid[row,column-1]!=0)
+                {
+                    return regionGrid[row,column-1];
+                }
+            }
+            //Check up
+            if (row!=0)
+            {
+                if (regionGrid[row-1,column]!=0)
+                {
+                    return regionGrid[row-1,column];
+                }
+            }
+            //Check right
+            if (column!=127)
+            {
+                if (regionGrid[row,column+1]!=0)
+                {
+                    return regionGrid[row,column+1];
+                }
+            }
+            //Check down
+            if (row!=127)
+            {
+                if (regionGrid[row+1,column]!=0)
+                {
+                     return regionGrid[row+1,column];
+                }
+            }
+
+            return 0;
         }
 
         public static string CalculateKnotHash(List<int> inputInstructions)
