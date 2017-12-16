@@ -84,41 +84,7 @@ namespace AdventOfCode
                 {
                     if (stringGrid[row][column]=='1')
                     {
-                        int valueInFinalGrid = regionGrid[row,column];
-                        if (valueInFinalGrid==0)
-                        {
-                            regionGrid[row,column] = currentRegionTracker;
-                            //Check right
-                            if (column<127&& row<127)
-                            {
-                                if (stringGrid[row][column+1]=='1')
-                                {
-                                    regionGrid[row,column+1]=currentRegionTracker;
-                                }
-                                //Check down
-                                if (stringGrid[row+1][column]=='1')
-                                {
-                                    regionGrid[row+1,column]=currentRegionTracker;
-                                }
-                            }
-                            currentRegionTracker++;
-                        }  
-                        else if (valueInFinalGrid!=0)
-                        {
-                            if (column<127 && row<127)
-                            {
-                                //Populate right
-                                if (stringGrid[row][column+1]=='1')
-                                {
-                                    regionGrid[row,column+1]=valueInFinalGrid;
-                                }
-                                //Populate down
-                                if (stringGrid[row+1][column]=='1')
-                                {
-                                    regionGrid[row+1,column]=valueInFinalGrid;
-                                }
-                            }
-                        }                      
+                        //TODO CHECKING STUFF HERE               
                         
                     }
                 }
