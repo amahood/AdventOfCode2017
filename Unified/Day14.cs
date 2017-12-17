@@ -16,7 +16,7 @@ namespace AdventOfCode
             //128x128 grid, each row by a knot hash
             //Each row represntation of knot hash of <string>-<rownumber>
 
-            string inputString = "flqrgnkx";
+            string inputString = "wenycdww";
             StringBuilder trackingString = new StringBuilder();
             List<string> stringGrid = new List<string>();
             //Loop of 128
@@ -77,140 +77,85 @@ namespace AdventOfCode
                 }
             }
 
-            //With current implementation, I'm getting close, like 1600 some 
-            //Sample case I don't think I handle is if there is a giant U, I will start at both ends with different numbers
+            //With current implementation, I'm getting close, like 1600 some, but sample case I don't think I handle is if there is a giant U, I will start at both ends with different numbers
             for (int row =0; row<128; row++)
             {
                 for (int column = 0; column<128; column++)
                 {
                     if (stringGrid[row][column]=='1')
                     {
+                        //Try chase mechansim
                         //Retrieve square from answer grid and check to see if grid is already populated with number
                         int answerFromAnswerGrid = regionGrid[row,column];
-                        bool populatedDownNeighbor = false;
-                        bool populatedRightNeighbor = false;
 
                         if (answerFromAnswerGrid==0)
                         {
-                            //Set Me
-                            regionGrid[row,column] = currentRegionTracker;
-                            //Populate Neighbors
-                                //Populate right
-                                if (column<127)
+                            int squaresVisitedInThisGroup = 0;
+
+                            List<KeyValuePair<int,int>> squaresToVisit = new List<KeyValuePair<int, int>>();
+                            KeyValuePair<int,int> currentSquare = new KeyValuePair<int, int>(row,column);
+                            squaresToVisit.Add(currentSquare);
+
+                            List<KeyValuePair<int,int>> haveVisitedBeforeInThisGroup = new List<KeyValuePair<int, int>>();
+
+                            while (squaresToVisit.Count!=0)
+                            {
+                                currentSquare = squaresToVisit.First();
+                                int currentRow = currentSquare.Key;
+                                int currentColumn = currentSquare.Value;
+                                squaresToVisit.Remove(currentSquare);
+                                haveVisitedBeforeInThisGroup.Add(new KeyValuePair<int,int>(currentRow,currentColumn));
+
+                                regionGrid[currentRow,currentColumn] = currentRegionTracker;
+                                
+                                //Check right
+                                if (currentColumn<127)
                                 {
-                                    if (stringGrid[row][column+1]=='1' && regionGrid[row,column+1]==0)
+                                    if (stringGrid[currentRow][currentColumn+1]=='1' && regionGrid[currentRow,currentColumn+1]==0 && !haveVisitedBeforeInThisGroup.Contains(new KeyValuePair<int, int>(currentRow, currentColumn+1)) && !squaresToVisit.Contains(new KeyValuePair<int, int>(currentRow, currentColumn+1)))
                                     {
-                                        regionGrid[row,column+1]=currentRegionTracker;
-                                        populatedRightNeighbor = true;
+                                        squaresToVisit.Add(new KeyValuePair<int, int>(currentRow, currentColumn+1));
                                     }
                                 }
-                                //Populate down
-                                if (row<127)
+                                //Check left
+                                if (currentColumn>0)
                                 {
-                                    if (stringGrid[row+1][column]=='1' && regionGrid[row+1,column]==0)
+                                    if (stringGrid[currentRow][currentColumn-1]=='1' && regionGrid[currentRow, currentColumn-1]==0 && !haveVisitedBeforeInThisGroup.Contains(new KeyValuePair<int, int>(currentRow, currentColumn-1)) &&  !squaresToVisit.Contains(new KeyValuePair<int, int>(currentRow, currentColumn-1)))
                                     {
-                                        regionGrid[row+1,column]=currentRegionTracker;
-                                        populatedDownNeighbor = true;
+                                        squaresToVisit.Add(new KeyValuePair<int, int>(currentRow, currentColumn-1));
                                     }
                                 }
-                                //If populated right, populate upright
-                                if (row >0 && column<127)
+                                //Check up
+                                if (currentRow>0)
                                 {
-                                    if (populatedRightNeighbor)
+                                    if (stringGrid[currentRow-1][currentColumn]=='1' && regionGrid[currentRow-1, currentColumn]==0 && !haveVisitedBeforeInThisGroup.Contains(new KeyValuePair<int, int>(currentRow-1, currentColumn)) && !squaresToVisit.Contains(new KeyValuePair<int, int>(currentRow-1, currentColumn)))
                                     {
-                                        if (stringGrid[row-1][column+1]=='1' && regionGrid[row-1,column+1]==0)
-                                        {
-                                            regionGrid[row-1,column+1]=currentRegionTracker;
-                                        }
+                                        squaresToVisit.Add(new KeyValuePair<int, int>(currentRow-1, currentColumn));
                                     }
                                 }
-                                //IF populated down, populate downleft
-                                if (row<127 && column>0)
+                                //Check down
+                                if (currentRow<127)
                                 {
-                                    if (populatedDownNeighbor)
+                                    if (stringGrid[currentRow+1][currentColumn]=='1' && regionGrid[currentRow+1, currentColumn]==0 && !squaresToVisit.Contains(new KeyValuePair<int, int>(currentRow+1, currentColumn)) && !haveVisitedBeforeInThisGroup.Contains(new KeyValuePair<int, int>(currentRow+1, currentColumn)))
                                     {
-                                        if (stringGrid[row+1][column-1]=='1' && regionGrid[row+1,column-1]==0)
-                                        {
-                                            regionGrid[row+1,column-1]=currentRegionTracker;
-                                        }
+                                        squaresToVisit.Add(new KeyValuePair<int, int>(currentRow+1, currentColumn));
                                     }
                                 }
-                                //If populated down or right, populate downright
-                                if (row<127 && column<127)
-                                {
-                                    if (populatedDownNeighbor || populatedRightNeighbor)
-                                    {
-                                        if (stringGrid[row+1][column+1]=='1' && regionGrid[row+1,column+1]==0)
-                                        {
-                                            regionGrid[row+1,column+1]=currentRegionTracker;
-                                        }
-                                    }
-                                }
+
+                                squaresVisitedInThisGroup++;
+                            }
+                            //Console.WriteLine("Squares visited in Group "+ currentRegionTracker + " = " + squaresVisitedInThisGroup);
+                            
                             currentRegionTracker++;                        
                         }
                         else if (answerFromAnswerGrid!=0)
                         {
-                            //Spread disease to neighbors
-                            int currentSquareValue = answerFromAnswerGrid;
-                            //Populate Neighbors
-                                //Populate right
-                                if (column<127)
-                                {
-                                    if (stringGrid[row][column+1]=='1' && regionGrid[row,column+1]==0)
-                                    {
-                                        regionGrid[row,column+1]=currentSquareValue;
-                                        populatedRightNeighbor = true;
-                                    }
-                                }
-                                //Populate down
-                                if (row<127)
-                                {
-                                    if (stringGrid[row+1][column]=='1' && regionGrid[row+1,column]==0)
-                                    {
-                                        regionGrid[row+1,column]=currentSquareValue;
-                                        populatedDownNeighbor = true;
-                                    }
-                                }
-                                //If populated right, populate upright
-                                if (row >0 && column<127)
-                                {
-                                    if (populatedRightNeighbor)
-                                    {
-                                        if (stringGrid[row-1][column+1]=='1' && regionGrid[row-1,column+1]==0)
-                                        {
-                                            regionGrid[row-1,column+1]=currentSquareValue;
-                                        }
-                                    }
-                                }
-                                //IF populated down, populate downleft
-                                if (row<127 && column>0)
-                                {
-                                    if (populatedDownNeighbor)
-                                    {
-                                        if (stringGrid[row+1][column-1]=='1' && regionGrid[row+1,column-1]==0)
-                                        {
-                                            regionGrid[row+1,column-1]=currentSquareValue;
-                                        }
-                                    }
-                                }
-                                //If populated down or right, populate downright
-                                if (row<127 && column<127)
-                                {
-                                    if (populatedDownNeighbor || populatedRightNeighbor)
-                                    {
-                                        if (stringGrid[row+1][column+1]=='1' && regionGrid[row+1,column+1]==0)
-                                        {
-                                            regionGrid[row+1,column+1]=currentSquareValue;
-                                        }
-                                    }
-                                }
+                            //Do nothing, just go to next square, as we've already hit this as part of the chase
                         }
                     }
                 }
             }
 
             Console.WriteLine("Number of groups - " + (currentRegionTracker-1));
-
         }
 
         public static string CalculateKnotHash(List<int> inputInstructions)
