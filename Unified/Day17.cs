@@ -16,65 +16,53 @@ namespace AdventOfCode
             List<int> circularBuffer = new List<int>();
             circularBuffer.Add(0);
 
-            int incrementStep = 337; //Ultiamtely this gets changed to my puzzle input
-            int numCyclesToRun = 2017; //Ultimately this changes to 2017, just using 9 to work through test case
+            int incrementStep = 337; 
+            int numCyclesToRun = 50000000;
             int currentLocationIndex = 0;
             int nextNewValue = 1;
+            int bufferSize = 1;
+            int latestCycleToTouch0 = 0;
 
+            //For part 2, I don't need to actually keep track of the list, all I need to know is eveyrtime I land on 0 as my current location after move
             for (int i = 0; i<numCyclesToRun;i++)
             {
                 //Get min number of steps to move via modulo (number past full revolution)
                 int moduloCycleCount = 0;
-                if (circularBuffer.Count==1 || (circularBuffer.Count==incrementStep))
+                if (bufferSize==1 || (bufferSize==incrementStep))
                 {
                     moduloCycleCount=0;
                 }
-                else if (incrementStep>circularBuffer.Count)
+                else if (incrementStep>bufferSize)
                 {
-                    moduloCycleCount = incrementStep%circularBuffer.Count;
+                    moduloCycleCount = incrementStep%bufferSize;
                 }
-                else if (circularBuffer.Count>incrementStep)
+                else if (bufferSize>incrementStep)
                 {
                     moduloCycleCount = incrementStep;
                 }
                  
 
-                if (currentLocationIndex+moduloCycleCount > circularBuffer.Count-1)
+                if (currentLocationIndex+moduloCycleCount > bufferSize-1)
                 {
-                    currentLocationIndex = (currentLocationIndex+moduloCycleCount)-circularBuffer.Count;
+                    currentLocationIndex = (currentLocationIndex+moduloCycleCount)-bufferSize;
                 }
                 else
                 {
                     currentLocationIndex = currentLocationIndex + moduloCycleCount;
                 }
 
-                //Insert next value in next index position
-                List<int> buildingBuffer = new List<int>();
-                for (int j = 0;j<(currentLocationIndex+1);j++)
-                {
-                    buildingBuffer.Add(circularBuffer[j]);
-                }
-                buildingBuffer.Add(nextNewValue);
-                for (int k = currentLocationIndex+1;k<circularBuffer.Count;k++)
-                {
-                    buildingBuffer.Add(circularBuffer[k]);
-                }
-                
 
-                circularBuffer.Clear();
-                foreach (int newNum in buildingBuffer)
+                if (currentLocationIndex==0)
                 {
-                    circularBuffer.Add(newNum);
+                    latestCycleToTouch0 = nextNewValue;
                 }
 
-                //Make current location index the next spot and copy List over
                 currentLocationIndex++;
                 nextNewValue++;
+                bufferSize++;
             }
 
-            int nextManUp = circularBuffer[currentLocationIndex+1];
-            Console.WriteLine("Value after 2017 = " + nextManUp);
-
+            Console.WriteLine("Last cycle to touch 0, which is next number - "+latestCycleToTouch0);
         }     
     }
 }
