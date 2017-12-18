@@ -42,11 +42,11 @@ namespace AdventOfCode
             }
 
             //Create new register set
-            Dictionary<char,int> registerSet = new Dictionary<char, int>();
+            Dictionary<char,long> registerSet = new Dictionary<char, long>();
 
             //Process all instructions until next instruction is either <0 or ># instructions
             int nextInstructionIndex = 0;
-            int lastFrequencyPlayed = 0;
+            long lastFrequencyPlayed = 0;
             int numInstructionsProcessed = 0;
             while (nextInstructionIndex>=0 && nextInstructionIndex<instructionSet.Count)
             {
@@ -70,7 +70,7 @@ namespace AdventOfCode
                     case "set":
                         if (Int32.TryParse(currentInstruction.operand2, out parsedNum))
                         {
-                            registerSet[currentInstruction.operand1] = parsedNum;
+                            registerSet[currentInstruction.operand1] = (long)parsedNum;
                         }
                         else
                         {
@@ -81,7 +81,7 @@ namespace AdventOfCode
                     case "add":
                         if (Int32.TryParse(currentInstruction.operand2, out parsedNum))
                         {
-                            registerSet[currentInstruction.operand1] = registerSet[currentInstruction.operand1]+parsedNum;
+                            registerSet[currentInstruction.operand1] = registerSet[currentInstruction.operand1]+(long)parsedNum;
                         }
                         else
                         {
@@ -92,7 +92,7 @@ namespace AdventOfCode
                     case "mul":
                         if (Int32.TryParse(currentInstruction.operand2, out parsedNum))
                         {
-                            registerSet[currentInstruction.operand1] = registerSet[currentInstruction.operand1]*parsedNum;
+                            registerSet[currentInstruction.operand1] = registerSet[currentInstruction.operand1]*(long)parsedNum;
                         }
                         else
                         {
@@ -103,7 +103,7 @@ namespace AdventOfCode
                     case "mod":
                         if (Int32.TryParse(currentInstruction.operand2, out parsedNum))
                         {
-                            registerSet[currentInstruction.operand1] = registerSet[currentInstruction.operand1]%parsedNum;
+                            registerSet[currentInstruction.operand1] = registerSet[currentInstruction.operand1]%(long)parsedNum;
                         }
                         else
                         {
@@ -127,7 +127,7 @@ namespace AdventOfCode
                             }
                             else
                             {
-                                nextInstructionIndex+=registerSet[currentInstruction.operand2[0]];
+                                nextInstructionIndex+=(int)registerSet[currentInstruction.operand2[0]];
                             }
                         }
                         else {nextInstructionIndex++;}
