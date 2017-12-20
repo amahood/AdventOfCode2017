@@ -62,6 +62,7 @@ namespace AdventOfCode
             int currentColumn = startingColumn;
             string currentDirection = "Down";
             char nextChar;
+            int numSteps = 1;
             while (!foundEnd)
             {
                 switch (currentDirection)
@@ -108,7 +109,9 @@ namespace AdventOfCode
                         }
                         break;
                 }
+                numSteps++;
             }
+            Console.WriteLine("Number of steps traveled - " + (numSteps-1));
         }    
 
 
