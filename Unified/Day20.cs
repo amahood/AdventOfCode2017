@@ -46,48 +46,105 @@ namespace AdventOfCode
                 particles.Add(tempParticle);
             }
             
-            List<long> accelList = new List<long>();
-            foreach (Particle p in particles)
+            //Part 1 goop
             {
-                long accelValue = Math.Abs(p.xAcc)+ Math.Abs(p.yAcc) + Math.Abs (p.zAcc);
-                accelList.Add(accelValue);                
-            }
-            long minAccelValue = accelList.Min();
-            
-            List<int> indexOfLowest = new List<int>();
-            int indexTracker = 0;
-            foreach (Particle p in particles)
-            {
-                long accelValue = Math.Abs(p.xAcc)+ Math.Abs(p.yAcc) + Math.Abs (p.zAcc);
-                if (accelValue== minAccelValue)
+                List<long> accelList = new List<long>();
+                foreach (Particle p in particles)
                 {
-                    indexOfLowest.Add(indexTracker);
+                    long accelValue = Math.Abs(p.xAcc)+ Math.Abs(p.yAcc) + Math.Abs (p.zAcc);
+                    accelList.Add(accelValue);                
                 }
-                indexTracker++;
-            }
+                long minAccelValue = accelList.Min();
+                
+                List<int> indexOfLowest = new List<int>();
+                int indexTracker = 0;
+                foreach (Particle p in particles)
+                {
+                    long accelValue = Math.Abs(p.xAcc)+ Math.Abs(p.yAcc) + Math.Abs (p.zAcc);
+                    if (accelValue== minAccelValue)
+                    {
+                        indexOfLowest.Add(indexTracker);
+                    }
+                    indexTracker++;
+                }
 
-            long lowestManhattan = 0;
-            indexTracker = 0;
-            int indexOfClosest = 0;
-            foreach (int i in indexOfLowest)
-            {
-                long manhattan = Math.Abs(particles[i].xPos) + Math.Abs(particles[i].yPos) + Math.Abs(particles[i].zPos);
-                if (indexTracker==0)
+                long lowestManhattan = 0;
+                indexTracker = 0;
+                int indexOfClosest = 0;
+                foreach (int i in indexOfLowest)
                 {
-                    lowestManhattan = manhattan;
-                }
-                else
-                {
-                    if (manhattan<lowestManhattan)
+                    long manhattan = Math.Abs(particles[i].xPos) + Math.Abs(particles[i].yPos) + Math.Abs(particles[i].zPos);
+                    if (indexTracker==0)
                     {
                         lowestManhattan = manhattan;
-                        indexOfClosest = i;
+                    }
+                    else
+                    {
+                        if (manhattan<lowestManhattan)
+                        {
+                            lowestManhattan = manhattan;
+                            indexOfClosest = i;
+                        }
+                    }
+                    indexTracker++;
+                }
+                Console.WriteLine("Closest at the limit - " + indexOfClosest);
+            }   
+
+            //Check for collisions at initial location - This is error prone and isn't consistent with how I do it in main loop, but gives me answer so is fine
+            bool foundOneMatchForCurrentParticle = false;
+            for (int j = 0;j<particles.Count;j++)
+            {
+                for (int i = 0; i<particles.Count; i++)
+                {
+                    if ( (particles[j].xPos==particles[i].xPos && particles[j].yPos==particles[i].yPos && particles[j].zPos==particles[i].zPos) && i!=j )
+                    {
+                        foundOneMatchForCurrentParticle = true;
+                        particles.Remove(particles[i]);
                     }
                 }
-                indexTracker++;
+                if (foundOneMatchForCurrentParticle)
+                {
+                    particles.Remove(particles[j]);
+                }
             }
-            Console.WriteLine("Closest at the limit - " + indexOfClosest);
-                            
+
+            int collisionContinue = 0;
+            while (collisionContinue<1000)
+            {
+                //Update position
+                foreach (Particle p in particles)
+                {
+                    p.UpdateParticle();
+                }
+                //Check for collisions
+                foundOneMatchForCurrentParticle = false;
+                for (int j = 0;j<particles.Count;j++)
+                {
+                    for (int i = 0; i<particles.Count; i++)
+                    {
+                        if ( (particles[j].xPos==particles[i].xPos && particles[j].yPos==particles[i].yPos && particles[j].zPos==particles[i].zPos) && i!=j )
+                        {
+                            particles[j].flagToRemove = true;//I know this is redundant and will get set everytime, but whatever
+                            particles[i].flagToRemove = true;
+                        }
+                    }
+                }
+
+                for (int r = 0;r<particles.Count;r++)
+                {
+                    if (particles[r].flagToRemove)
+                    {
+                        particles.Remove(particles[r]);
+                        Console.WriteLine("Remove particle"); 
+                    }
+                }
+
+                collisionContinue++;
+                Console.WriteLine("Number of particles remaining - "+particles.Count);
+            }
+            Console.WriteLine("No more collisions, "+particles.Count + " particles left!");
+
         }
 
     }
@@ -106,14 +163,16 @@ namespace AdventOfCode
             yVel = 0;
             zVel = 0;
             manhattanDistance = 0;
+            flagToRemove = false;
         }
+
 
        public void UpdateParticle()
         {
             
             this.xVel += this.xAcc;
             this.yVel +=this.yAcc;
-            this.xVel += this.xAcc;
+            this.zVel += this.zAcc;
 
             this.xPos += this.xVel;
             this.yPos += this.yVel;
@@ -132,6 +191,8 @@ namespace AdventOfCode
         public int yAcc;
         public int zAcc;
         public long manhattanDistance;
+        public bool flagToRemove;
+    
     }
 }
 
