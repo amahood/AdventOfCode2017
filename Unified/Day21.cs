@@ -56,18 +56,35 @@ namespace AdventOfCode
             int currentSize = 3;
             for (int enhances = 0;enhances<5;enhances++)
             {
-                int numSubsquares;
+                int numSubsquares = 0; 
                 List<char[,]> subsquares = new List<char[,]>();
                 if (currentSize%2==0)
                 {
                     numSubsquares = currentSize/2;
+                    int numSubsMade = 0;
+                    while (numSubsMade<numSubsquares)
+                    {
+                        char[,] tempSquare = new char[2,2];
+
+                        int localRowTracker = 0;
+                        for (int row = numSubsMade*2;row<(numSubsMade*2+2);row++)
+                        {
+                            
+                            int localColTracker = 0;
+                            for (int col = numSubsMade*2;col<(numSubsMade*2+2);col++)
+                            {
+                                tempSquare[localRowTracker,localColTracker] = startingImage[row,col];
+                                localColTracker++;
+                            }
+                            localRowTracker++;
+                        }
+                        subsquares.Add(tempSquare);   
+                        numSubsMade++;   
+                    }     
                 }
                 else if (currentSize%3==0)
                 {
-                    numSubsquares = currentSize/3;
-                    char[,] finalIterationSquare = new char[currentSize+numSubsquares,currentSize+numSubsquares];
-                    
-                    //Make subgrids
+                    numSubsquares = currentSize/3;           
                     int numSubsMade = 0;
                     while (numSubsMade<numSubsquares)
                     {
@@ -85,14 +102,21 @@ namespace AdventOfCode
                             }
                             localRowTracker++;
                         }
-                        subsquares.Add(tempSquare);
-                    
-                    
-                    //TODO 
-                        //Match and translate
-                        //REcombine into larger item
-                    
+                        subsquares.Add(tempSquare);   
+                        numSubsMade++;   
+                    }              
                 }
+
+                int newSize = currentSize+numSubsquares;
+                char[,] finalIterationSquare = new char[newSize,newSize];
+                List<int> transformsToAdd = new List<int>();
+                foreach (char[,] s in subsquares)
+                {
+                    transformsToAdd.Add(MatchPattern(s));
+                }
+                //Combine into larger item
+                int numSquaresPerSide = newSize/transformOutputs[transformsToAdd.First()].GetLength(0);
+                //TODO - WRITE RECOMBINATION LOGIC
             }
             
         }
@@ -100,6 +124,7 @@ namespace AdventOfCode
         public static int MatchPattern(char[,] inputPattern)
         {
             int inputPatternIndex = 0;
+            //TODO - WRITE MATCHING LOGIC
             return inputPatternIndex;
         }
 
