@@ -55,13 +55,13 @@ namespace AdventOfCode
             
             int currentSize = 3;
             char[,] finalIterationSquare = new char[,]{};
-            for (int enhances = 0;enhances<2;enhances++)
+            for (int enhances = 0;enhances<5;enhances++)
             {
                 int numSubsquares = 0; 
                 List<char[,]> subsquares = new List<char[,]>();
                 if (currentSize%2==0)
                 {
-                    numSubsquares = Convert.ToInt32(Math.Pow(Convert.ToDouble(2),Convert.ToDouble(currentSize/2)));
+                    numSubsquares = Convert.ToInt32(Math.Pow(Convert.ToDouble(currentSize/2), Convert.ToDouble(2)));
                     int numSubsMade = 0;
                     while (numSubsMade<numSubsquares)
                     {
@@ -69,7 +69,7 @@ namespace AdventOfCode
                         {
                             char[,] tempSquare = new char[2,2];
                             int localRowTracker = 0;
-                            for (int row = numSubsMade/2*2;row<(numSubsMade/2*2+2);row++)
+                            for (int row = numSubsMade/numSubsquares*2;row<(numSubsMade/numSubsquares*2+2);row++)
                             {
                                 int localColTracker = 0;
                                 for (int col = subs*2;col<(subs*2+2);col++)
@@ -100,7 +100,7 @@ namespace AdventOfCode
                         {
                             char[,] tempSquare = new char[3,3];
                             int localRowTracker = 0;
-                            for (int row = numSubsMade/3*3;row<(numSubsMade/3*3+3);row++)
+                            for (int row =numSubsMade/numSubsquares*3;row<(numSubsMade/numSubsquares*3+3);row++)
                             {
                                 int localColTracker = 0;
                                 for (int col = subs*3;col<(subs*3+3);col++)
