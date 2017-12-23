@@ -53,104 +53,24 @@ namespace AdventOfCode
                 transformOutputs.Add(outputItem);
             }
             
-            int currentSize = 3;
             char[,] finalIterationSquare = new char[,]{};
+            finalIterationSquare = (char[,])startingImage.Clone();
             for (int enhances = 0;enhances<5;enhances++)
             {
-                int numSubsquares = 0; 
+                //Split into subsquares
                 List<char[,]> subsquares = new List<char[,]>();
-                if (currentSize%2==0)
-                {
-                    numSubsquares = Convert.ToInt32(Math.Pow(Convert.ToDouble(currentSize/2), Convert.ToDouble(2)));
-                    int numSubsMade = 0;
-                    while (numSubsMade<numSubsquares)
-                    {
-                        for (int subs = 0; subs<currentSize/2;subs++)
-                        {
-                            char[,] tempSquare = new char[2,2];
-                            int localRowTracker = 0;
-                            for (int row = numSubsMade/numSubsquares*2;row<(numSubsMade/numSubsquares*2+2);row++)
-                            {
-                                int localColTracker = 0;
-                                for (int col = subs*2;col<(subs*2+2);col++)
-                                {
-                                    tempSquare[localRowTracker,localColTracker] = finalIterationSquare[row,col];
-                                    localColTracker++;
-                                }
-                                localRowTracker++;  
-                            }
-                            subsquares.Add((char[,])tempSquare.Clone());   
-                            numSubsMade++; 
-                        }   
-                        
-                    }     
-                }
-                else if (currentSize%3==0)
-                {
-                    if (currentSize!=3)
-                    {
-                        numSubsquares = Convert.ToInt32(Math.Pow(Convert.ToDouble(2),Convert.ToDouble(currentSize/3)));
-                    }
-                    else numSubsquares = 1;
-
-                    int numSubsMade = 0;
-                    while (numSubsMade<numSubsquares)
-                    {
-                        for (int subs = 0; subs<currentSize/3;subs++)
-                        {
-                            char[,] tempSquare = new char[3,3];
-                            int localRowTracker = 0;
-                            for (int row =numSubsMade/numSubsquares*3;row<(numSubsMade/numSubsquares*3+3);row++)
-                            {
-                                int localColTracker = 0;
-                                for (int col = subs*3;col<(subs*3+3);col++)
-                                {
-                                    if (currentSize==3)
-                                    {
-                                        tempSquare[localRowTracker,localColTracker] = startingImage[row,col];
-                                    }
-                                    else tempSquare[localRowTracker,localColTracker] = finalIterationSquare[row,col];
-                                    localColTracker++;
-                                }
-                                localRowTracker++;  
-                            }
-                            subsquares.Add((char[,])tempSquare.Clone());   
-                            numSubsMade++; 
-                        }   
-                        
-                    }               
-                }
-
+                subsquares = SplitToSubsquares(finalIterationSquare);
                 
+                //Match subsquares to rules
                 List<int> transformsToAdd = new List<int>();
                 foreach (char[,] s in subsquares)
                 {
                     transformsToAdd.Add(MatchPattern(s, transformInputs));
                 }
                 
-                //Combine into larger item
-                int sizeOfSubsquareside = transformOutputs[transformsToAdd.First()].GetLength(0);
-                int newSize = currentSize+currentSize/subsquares.First().GetLength(0);
-                int numSquaresPerSide = newSize/sizeOfSubsquareside;
-                int numSquaresRecombined = 0;
-                finalIterationSquare = new char[newSize,newSize];
-                while (numSquaresRecombined<numSubsquares)
-                {
-                    //Add row of subsquares
-                    for (int sub=0;sub<numSquaresPerSide;sub++)
-                    {
-                        for (int row = 0;row<sizeOfSubsquareside;row++)
-                        {
-                            for (int col = 0;col<sizeOfSubsquareside;col++)
-                            {
-                                finalIterationSquare[numSquaresRecombined/numSquaresPerSide*sizeOfSubsquareside+row, sub*sizeOfSubsquareside+col] = transformOutputs[transformsToAdd[numSquaresRecombined]][row,col];
-                            }
-                            
-                        }
-                        numSquaresRecombined++;
-                    }
-                }
-                currentSize = finalIterationSquare.GetLength(0);
+                char[,] combinedGrid = RecombineSubsquares(transformsToAdd, transformOutputs);
+                finalIterationSquare = new char[combinedGrid.GetLength(0),combinedGrid.GetLength(0)];
+                finalIterationSquare = (char[,])combinedGrid.Clone();
             }
 
             Console.WriteLine("Printing final grid:");
@@ -171,6 +91,44 @@ namespace AdventOfCode
             }
             Console.WriteLine("Number of pixels still on = "+numPixelsOn);
             
+        }
+
+        public static List<char[,]> SplitToSubsquares(char[,] gridToSplit)
+        {
+            List<char[,]> listOfSubsquares = new List<char[,]>();
+            char[,] copyOfGrid = (char[,])gridToSplit.Clone();
+            
+            int incomingGridDimension = gridToSplit.GetLength(0);
+            int divisibleBy=0;
+
+            if (incomingGridDimension%2==0){divisibleBy=2;}
+            else if (incomingGridDimension%3==0){divisibleBy=3;}
+            else {Console.WriteLine("Should never get here, means error parsing grid dimension!");}
+
+            for (int r = 0; r<incomingGridDimension; r += divisibleBy)
+            {
+                for (int c = 0; c<incomingGridDimension; c += divisibleBy)
+                {
+                    char[,] subsquare = new char[divisibleBy,divisibleBy];
+
+                    subsquare[0,0] = copyOfGrid[r,c];
+                    subsquare[0,1] = copyOfGrid[r,c+1];
+                    subsquare[1,0] = copyOfGrid[r+1,c];
+                    subsquare[1,1] = copyOfGrid[r+1,c+1];
+                    if (divisibleBy==3)
+                    {
+                        subsquare[0,2] = copyOfGrid[r,c+2];
+                        subsquare[1,2] = copyOfGrid[r+1,c+2];
+                        subsquare[2,0] = copyOfGrid[r+2,c];
+                        subsquare[2,1] = copyOfGrid[r+2,c+1];
+                        subsquare[2,2] = copyOfGrid[r+2,c+2];
+                    }
+
+                    listOfSubsquares.Add(subsquare);
+                }
+            }
+
+            return listOfSubsquares;
         }
 
         public static int MatchPattern(char[,] inputPattern, List<char[,]> transformInputs)
@@ -250,6 +208,44 @@ namespace AdventOfCode
             }
             Console.WriteLine("Should never get here, means we didn't get a match!!!!!");
             return inputPatternIndex;
+        }
+
+        public static char[,] RecombineSubsquares(List<int> transformIndexes, List<char[,]> transformOutputs)
+        {
+            int subsquareSize = transformOutputs[transformIndexes.First()].GetLength(0);
+            int newGridSize = (int)Math.Sqrt(transformIndexes.Count)*subsquareSize;
+            int transformIndex = 0;
+
+            char[,] outputGrid = new char[newGridSize,newGridSize];
+            for (int r=0; r<newGridSize; r += subsquareSize)
+            {
+                for (int c = 0; c< newGridSize; c += subsquareSize)
+                {
+                    outputGrid[r,c] = transformOutputs[transformIndexes[transformIndex]][0,0];
+                    outputGrid[r,c+1] = transformOutputs[transformIndexes[transformIndex]][0,1];
+                    outputGrid[r,c+2] = transformOutputs[transformIndexes[transformIndex]][0,2];
+                    outputGrid[r+1,c] = transformOutputs[transformIndexes[transformIndex]][1,0];
+                    outputGrid[r+1,c+1] = transformOutputs[transformIndexes[transformIndex]][1,1];
+                    outputGrid[r+1,c+2] = transformOutputs[transformIndexes[transformIndex]][1,2];
+                    outputGrid[r+2,c] = transformOutputs[transformIndexes[transformIndex]][2,0];
+                    outputGrid[r+2,c+1] = transformOutputs[transformIndexes[transformIndex]][2,1];
+                    outputGrid[r+2,c+2] = transformOutputs[transformIndexes[transformIndex]][2,2];
+                    if (subsquareSize==4)
+                    {
+                        outputGrid[r,c+3] = transformOutputs[transformIndexes[transformIndex]][0,3];
+                        outputGrid[r+1,c+3] = transformOutputs[transformIndexes[transformIndex]][1,3];
+                        outputGrid[r+2,c+3] = transformOutputs[transformIndexes[transformIndex]][2,3];
+                        outputGrid[r+3,c] = transformOutputs[transformIndexes[transformIndex]][3,0];
+                        outputGrid[r+3,c+1] = transformOutputs[transformIndexes[transformIndex]][3,1];
+                        outputGrid[r+3,c+2] = transformOutputs[transformIndexes[transformIndex]][3,2];
+                        outputGrid[r+3,c+3] = transformOutputs[transformIndexes[transformIndex]][3,3];
+                    }
+
+                    transformIndex++;
+                }
+            }
+
+            return outputGrid;
         }
 
         public static char[,] Rotate90(char[,] array, int size)
