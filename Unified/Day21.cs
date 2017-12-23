@@ -55,7 +55,7 @@ namespace AdventOfCode
             
             char[,] finalIterationSquare = new char[,]{};
             finalIterationSquare = (char[,])startingImage.Clone();
-            for (int enhances = 0;enhances<5;enhances++)
+            for (int enhances = 0;enhances<18;enhances++)
             {
                 //Split into subsquares
                 List<char[,]> subsquares = new List<char[,]>();
