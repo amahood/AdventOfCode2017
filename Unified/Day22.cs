@@ -42,16 +42,11 @@ namespace AdventOfCode
             string currentDirection = "Up";
             int numSquaresCarrierHasInfected = 0;
 
-            for (int burstNum = 0; burstNum<100; burstNum++)
+            for (int burstNum = 0; burstNum<10000000; burstNum++)
             {
-              
-                //Find to see if we've been to node already, if not, assume it is clean
-                //bool haveVisitedBefore = false;
                 char currentHealthState=' ';
-                //int currentNodeIndex = 0;
                 int matchingNodeIndex = 0;
                 
-
                 var queryNodes = from node in nodesOnMap
                            where node.row == currentRow && node.col == currentCol
                            select node;
