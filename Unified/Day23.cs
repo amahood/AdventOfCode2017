@@ -30,7 +30,7 @@ namespace AdventOfCode
 
             //Initialize register set
             Dictionary<char,long> registerSet = new Dictionary<char, long>();
-            registerSet.Add('a',0);
+            registerSet.Add('a',1);
             registerSet.Add('b',0);
             registerSet.Add('c',0);
             registerSet.Add('d',0);
@@ -115,9 +115,12 @@ namespace AdventOfCode
                             }
                         break;
                 }
+                //Console.WriteLine("Program Counter - "+programCounter);
+                //Console.WriteLine("Value of h at the end of the instruction - " + registerSet['h']);
             }
 
             Console.WriteLine("Number of mul instructions processed - " + numberOfMulInstructions);
+            Console.WriteLine("Value of h at the end of the program - " + registerSet['h']);
         }
 
 
