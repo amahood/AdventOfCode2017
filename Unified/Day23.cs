@@ -13,6 +13,38 @@ namespace AdventOfCode
         {
             Console.WriteLine("-------------------DAY 23-------------------");
 
+            //TESTING LOOPS
+            int d=0;
+            int b = 108400;
+            int f = 0;
+            int h = 0;
+            int e =2;
+            for (int o = 0;o<1000;o++)
+            {
+                f = 1;
+                d = 2;
+                for (int m = 0;m<108398;m++)
+                {
+                    e = 2;
+                    for (int i = 0;i<108398;i++)
+                    {
+                        if (d*e==b)
+                        {
+                            f = 0;
+                        }
+                        e++;
+                    }
+                    d++;
+                }
+
+                if (f==0)
+                {
+                    h++;
+                    Console.WriteLine("Loop - "+o+", h now "+h);
+                }
+            }
+
+
             List<Instruction23> instructionList = new List<Instruction23>();
 
             StreamReader sr = new StreamReader("day23Input.txt");
