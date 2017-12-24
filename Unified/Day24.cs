@@ -69,9 +69,52 @@ namespace AdventOfCode
 
             Console.WriteLine("Strongest bridge score of possible bridges = "+bestBridge);
 
+            //Part 2 - Find lingest bridge
+            int longestBridge = 0;
+            List<List<Tuple<int,int>>> longestPossibleBridges = new List<List<Tuple<int, int>>>();
+            foreach (List<Tuple<int,int>> bridge in possibleBridges)
+            {
+                int bridgeLength = bridge.Count;
+                if (bridgeLength>=longestBridge)
+                {
+                    longestBridge = bridgeLength;
+                    
+                }
+            }
+            Console.WriteLine("Length of longest bridge = "+longestBridge);
+
+//COnvert to linq for fasterness
+            foreach (List<Tuple<int,int>> bridge in possibleBridges)
+            {
+                if (bridge.Count==longestBridge)
+                {
+                    longestPossibleBridges.Add(CopyBridge(bridge));
+                }
+            }
+
+            int scoreOfLongestBridge = 0;
+            if (longestPossibleBridges.Count>1)
+            {
+                int bestBridgeLong = 0;
+                foreach (List<Tuple<int,int>> bridge in longestPossibleBridges)
+                {
+                    int bridgeScore = ScoreBridge(bridge);
+                    if (bridgeScore>bestBridgeLong)
+                    {
+                        bestBridgeLong = bridgeScore;
+                    }
+                }
+                scoreOfLongestBridge = bestBridgeLong;
+            }
+            else
+            {
+                scoreOfLongestBridge = ScoreBridge(longestPossibleBridges.First());
+            }
+
+            Console.WriteLine("Score of longest bridge = " + scoreOfLongestBridge);
+
         }
 
-        //Update - Recursion logic works for the 0/1 case, but not for 0/2 yet
         public static List<List<Tuple<int,int>>> BuildPossibleBridges(List<Tuple<int,int>> bridge, List<Tuple<int,int>> availableSegments)
         {
             //Assume they are ordered in linkage order, will need to make this happen (build a swap function)
