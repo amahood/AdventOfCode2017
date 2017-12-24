@@ -50,7 +50,7 @@ namespace AdventOfCode
                 tempBridgeOnlyStarting.Add(t);
                 foreach (List<Tuple<int,int>> br in BuildPossibleBridges(tempBridgeOnlyStarting,availablePorts))
                 {
-                    possibleBridges.Add(br);
+                    possibleBridges.Add(CopyBridge(br));
                 }
             }
 
@@ -58,15 +58,16 @@ namespace AdventOfCode
 
         }
 
-        //TODO FIX RECURSION LOGIC
+        //Update - Recursion logic works for the 0/1 case, but not for 0/2 yet
         public static List<List<Tuple<int,int>>> BuildPossibleBridges(List<Tuple<int,int>> bridge, List<Tuple<int,int>> availableSegments)
         {
-            List<List<Tuple<int,int>>> possibleBridges = new List<List<Tuple<int, int>>>();
-
             //Assume they are ordered in linkage order, will need to make this happen (build a swap function)
+            List<List<Tuple<int,int>>> possibleBridges = new List<List<Tuple<int, int>>>();
             
             //Always add hte first one that comes in, because it is a valid option (i.e. just the starting pairs)
-            possibleBridges.Add(bridge);
+            possibleBridges.Add(CopyBridge(bridge)); 
+
+            //Remove last used segment from pool of available segmenets
             Tuple<int,int> segmentToRemove = bridge.Last();
             if (availableSegments.Where(t => (t.Item1==segmentToRemove.Item1 && t.Item2==segmentToRemove.Item2) || (t.Item1==segmentToRemove.Item2 && t.Item2==segmentToRemove.Item1)).Count()!=0)
             {
@@ -108,6 +109,16 @@ namespace AdventOfCode
             return possibleBridges;
         }
         
+        public static List<Tuple<int,int>> CopyBridge(List<Tuple<int,int>> inBridge)
+        {
+            List<Tuple<int,int>> bridgeCopy = new List<Tuple<int, int>>();
+            foreach (Tuple<int,int> t in inBridge)
+            {
+                bridgeCopy.Add(t);
+            }
+            return bridgeCopy;
+        }
+
         public static int ScoreBridge(List<Tuple<int,int>> bridge)
         {
             int bridgeScore = 0;
