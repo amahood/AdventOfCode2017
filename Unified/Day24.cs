@@ -56,6 +56,19 @@ namespace AdventOfCode
 
             Console.WriteLine("Number of bridges found - "+possibleBridges.Count);
 
+            //Score bridges
+            int bestBridge = 0;
+            foreach (List<Tuple<int,int>> bridge in possibleBridges)
+            {
+                int bridgeScore = ScoreBridge(bridge);
+                if (bridgeScore>bestBridge)
+                {
+                    bestBridge = bridgeScore;
+                }
+            }
+
+            Console.WriteLine("Strongest bridge score of possible bridges = "+bestBridge);
+
         }
 
         //Update - Recursion logic works for the 0/1 case, but not for 0/2 yet
@@ -96,8 +109,10 @@ namespace AdventOfCode
 
                 foreach (Tuple<int,int> t in matchesList)
                 {
-                    bridge.Add(t);
-                    List<List<Tuple<int,int>>> newBridges = BuildPossibleBridges(bridge, availableSegments);
+                    List<Tuple<int,int>> copy = CopyBridge(bridge);
+                    copy.Add(t);
+                    List<Tuple<int,int>> avialableSegmentCopy = CopyBridge(availableSegments);
+                    List<List<Tuple<int,int>>> newBridges = BuildPossibleBridges(copy, avialableSegmentCopy);
                     foreach (List<Tuple<int,int>> br in newBridges)
                     {
                         possibleBridges.Add(br);
