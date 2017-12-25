@@ -13,24 +13,60 @@ namespace AdventOfCode
         {
             Console.WriteLine("-------------------DAY 23-------------------");
 
-            //TESTING LOOPS
-            int d=0;
+             StreamReader sr2 = new StreamReader("day23Input.1.txt");
+            string line2;
+            char delimiter2 = ' ';
+            List<int> primes = new List<int>();
+            char delimiter3 = ',';
+            while ((line2 = sr2.ReadLine()) != null)
+            {
+                string[] substrings = line2.Split(delimiter2);
+                foreach (string s in substrings)
+                {
+                    string[] substrings2 = s.Split(delimiter3);
+                    string recombine = substrings2[0] + substrings2[1];
+                    primes.Add(Int32.Parse(recombine));
+                }
+                
+            }
+            int p = 0;
+            int c = 0;
+            int j = 108400;
+            while (c<1001)
+            {                
+                if (primes.Contains(j))
+                {
+                    p++;
+                    //Console.WriteLine("Hit prime - "+j);
+                }    
+                j+=17;
+                c++;
+            }
+            Console.WriteLine("Ending value of h should be - "+ (1000-p));
+
+/*
+            // TESTING LOOPS
+            int d=0 ;
             int b = 108400;
             int f = 0;
             int h = 0;
             int e =2;
-            for (int o = 0;o<1000;o++)
+            while ()
             {
                 f = 1;
                 d = 2;
-                for (int m = 0;m<108398;m++)
+                while(b!=d)
                 {
                     e = 2;
-                    for (int i = 0;i<108398;i++)
+                    while(b!=e)
                     {
                         if (d*e==b)
                         {
                             f = 0;
+                        }
+                        else{
+                            Console.WriteLine("B*E: "+ b*e);
+
                         }
                         e++;
                     }
@@ -44,7 +80,7 @@ namespace AdventOfCode
                 }
             }
 
-
+*/
             List<Instruction23> instructionList = new List<Instruction23>();
 
             StreamReader sr = new StreamReader("day23Input.txt");
@@ -92,6 +128,10 @@ namespace AdventOfCode
                         programCounter++;
                         break;
                     case "sub":
+                        if (nextInstruction.operand1[0]=='d')
+                        {
+                            //Console.WriteLine("exited inner loop");
+                        }
                         if (Int32.TryParse(nextInstruction.operand2, out parsedNum))
                         {
                             registerSet[nextInstruction.operand1[0]] = registerSet[nextInstruction.operand1[0]]-(long)parsedNum;
@@ -117,6 +157,11 @@ namespace AdventOfCode
                     case "jnz":
                         if (!Int32.TryParse(nextInstruction.operand1.ToString(), out parsedNum))
                             {
+                                                                //Debug loop for middle loop
+                                if (nextInstruction.operand1[0]=='f')
+                                {
+                                    Console.WriteLine("Debug, exisitng middle loop");
+                                }
                                 if (registerSet[nextInstruction.operand1[0]]!=0)
                                 {
                                     if (Int32.TryParse(nextInstruction.operand2, out parsedNum))
