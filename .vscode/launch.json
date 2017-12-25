@@ -12,7 +12,7 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/Unified/bin/Debug/netcoreapp2.0/Unified.dll",
-            "args": ["23"],
+            "args": ["25"],
             "cwd": "${workspaceFolder}/Unified",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
             "console": "internalConsole",

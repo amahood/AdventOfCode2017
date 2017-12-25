@@ -664,23 +664,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\admahood\\.nuget\\packages\\": {},
+    "C:\\Users\\Adam\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\admahood\\Coding\\AOC\\AdventOfCode2017\\Unified\\Unified.csproj",
+      "projectUniqueName": "c:\\Users\\Adam\\AdventOfCode2017\\Unified\\Unified.csproj",
       "projectName": "Unified",
-      "projectPath": "c:\\Users\\admahood\\Coding\\AOC\\AdventOfCode2017\\Unified\\Unified.csproj",
-      "packagesPath": "C:\\Users\\admahood\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\admahood\\Coding\\AOC\\AdventOfCode2017\\Unified\\obj\\",
+      "projectPath": "c:\\Users\\Adam\\AdventOfCode2017\\Unified\\Unified.csproj",
+      "packagesPath": "C:\\Users\\Adam\\.nuget\\packages\\",
+      "outputPath": "c:\\Users\\Adam\\AdventOfCode2017\\Unified\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\admahood\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Adam\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
@@ -704,7 +704,7 @@
         "dependencies": {
           "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "[2.0.0, )",
+            "version": "2.0",
             "autoReferenced": true
           }
         },
