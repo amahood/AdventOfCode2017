@@ -42,7 +42,7 @@ namespace AdventOfCode
                 j+=17;
                 c++;
             }
-            Console.WriteLine("Ending value of h should be - "+ (1000-p));
+            Console.WriteLine("Ending value of h should be - "+ (1001-p));
 
 /*
             // TESTING LOOPS
